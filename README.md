@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # create
 
 ## Project setup
@@ -17,3 +18,6 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# dipicture
+>>>>>>> 21085c68ac82256ad73d1d56ed5d219e1da446e3
