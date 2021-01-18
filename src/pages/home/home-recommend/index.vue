@@ -7,9 +7,13 @@
   >
     <!-- 推荐区域 -->
     <view class="recommend_wrap">
-      <view class="recommend_item" v-for="item in recommends" :key="item.id">
+      <navigator 
+      class="recommend_item" 
+      v-for="item in recommends" 
+      :key="item.id"
+      :url="`/pages/album/index?id=${item.target}`">
         <image mode="widthFix" :src="item.thumb"></image>
-      </view>
+      </navigator>
     </view>
 
     <!-- 月份 -->
@@ -69,7 +73,7 @@ export default {
         skip: 0
       },
       //表示是否还有下一页
-      hasMore:true
+      hasMore: true
     };
   },
   //组件挂载完成时触发
@@ -83,23 +87,29 @@ export default {
         url: "http://157.122.54.189:9088/image/v3/homepage/vertical",
         data: this.params
       }).then(result => {
-        console.log(result);
-
+        // console.log(result);
 
         //判断还有没有下一页数据
-        if(result.res.vertical.length === 0) {
+        if (result.res.vertical.length === 0) {
           this.hasMore = false;
+          //弹窗提示
+          uni.showToast({
+            title: "没有数据了",
+            icon: "none",
+            mask: true
+          });
           return;
         }
 
-        if(this.recommends.length === 0) { //第一次发送请求
+        if (this.recommends.length === 0) {
+          //第一次发送请求
           //推荐模块
-        this.recommends = result.res.homepage[1].items;
-        //月份模块
-        this.months = result.res.homepage[2];
-        // 将时间戳 改成 18号/月 moment.js
-        this.months.MM = moment(this.months.stime).format("MM");
-        this.months.DD = moment(this.months.stime).format("DD");
+          this.recommends = result.res.homepage[1].items;
+          //月份模块
+          this.months = result.res.homepage[2];
+          // 将时间戳 改成 18号/月 moment.js
+          this.months.MM = moment(this.months.stime).format("MM");
+          this.months.DD = moment(this.months.stime).format("DD");
         }
 
         //热门数据列表
@@ -116,17 +126,17 @@ export default {
         2 重新放请求 getList() 
         3 请求回来的 hots 数据叠加
       */
-     if(this.hasMore) {
-       this.params.skip += this.params.limit;
-       this.getList();
-     }else {
-       //弹窗提示
-       uni.showToast({
-         title: '没有数据了',
-         icon: 'none',
-         mask: true
-       })
-     }
+      if (this.hasMore) {
+        this.params.skip += this.params.limit;
+        this.getList();
+      } else {
+        //弹窗提示
+        uni.showToast({
+          title: "没有数据了",
+          icon: "none",
+          mask: true
+        });
+      }
     }
   }
 };
@@ -135,7 +145,7 @@ export default {
 <style lang="scss" scoped>
 .recommend_view {
   //height = 屏幕高度 - 头部标题高度
-  height: calc(100vh - 36rpx);
+  height: calc(100vh - 36px);
 }
 
 .recommend_wrap {
@@ -204,8 +214,6 @@ export default {
     .hots_item {
       width: 33.33%;
       border: 5rpx solid #fff;
-      image {
-      }
     }
   }
 }
