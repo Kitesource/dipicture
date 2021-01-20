@@ -13,7 +13,9 @@
 
     <!-- 高清大图 -->
     <view class="high_img">
-      <image :src="imgDetail.thumb" mode="widthFix" />
+      <swiper-action @swiperAction="handleSwiperAction">
+        <image :src="imgDetail.thumb" mode="widthFix" />
+      </swiper-action>
     </view>
 
     <!-- 点赞收藏 -->
@@ -109,9 +111,13 @@
 
 <script>
 import moment from "moment";
+import swiperAction from "@/components/swiperAction";
 //设置语言为中文
 moment.locale("zh-cn");
 export default {
+  components: {
+    swiperAction
+  },
   data() {
     return {
       //图片信息对象 包含着用户信息
@@ -121,39 +127,74 @@ export default {
       //最热评论
       hot: [],
       //最新评论
-      comment: []
+      comment: [],
+      //图片的索引
+      imgIndex: 0
     };
   },
   onLoad(args) {
     // console.log(getApp().globalData);
-    const { imgList, imgIndex } = getApp().globalData;
-    this.imgDetail = imgList[imgIndex];
-    //拼接图片路径
-    /* this.imgDetail.newThumb =
-      this.imgDetail.thumb + this.imgDetail.rule.replace("$<Height>", 360); */
-
-    //利用momentjs转换时间戳 => 几年前
-    this.imgDetail.cnTime = moment(this.imgDetail.atime * 1000).fromNow();
-
-    //获取图片详情的id
-    // this.imgDetail.id;
-    this.getComments(this.imgDetail.id);
+    const { imgIndex } = getApp().globalData;
+    this.imgIndex = imgIndex;
+    this.getData();
   },
   methods: {
+    //给当前页面赋值
+    getData() {
+      const { imgList } = getApp().globalData;
+      this.imgDetail = imgList[this.imgIndex];
+      //利用momentjs转换时间戳 => 几年前
+      this.imgDetail.cnTime = moment(this.imgDetail.atime * 1000).fromNow();
+
+      //获取图片详情的id
+      // this.imgDetail.id;
+      this.getComments(this.imgDetail.id);
+    },
+    //发送请求获取数据
     getComments(id) {
       this.request({
         url: `http://157.122.54.189:9088/image/v2/wallpaper/wallpaper/${id}/comment`
       }).then(result => {
-        console.log(result);
+        // console.log(result);
         // this.album = result.res.album;
 
         //给hot数组中的对象添加一个事件属性 xxx月前
-        result.res.hot.forEach(v=>v.cnTime=moment(v.atime*1000).fromNow());
-        result.res.comment.forEach(v=>v.cnTime=moment(v.atime*1000).fromNow());
+        result.res.hot.forEach(
+          v => (v.cnTime = moment(v.atime * 1000).fromNow())
+        );
+        result.res.comment.forEach(
+          v => (v.cnTime = moment(v.atime * 1000).fromNow())
+        );
 
         this.hot = result.res.hot;
         this.comment = result.res.comment;
       });
+    },
+    //滑动事件
+    handleSwiperAction(e) {
+      // console.log(e);
+      /* 
+        用户左滑， imgIndex++
+        用户右滑， imgIndex--
+        判断数组是否越界问题！！
+          左滑 e.direction==="left"&& this.imgIndex<imgList.length-1
+          右滑 e.direction==="right"&& this.imgIndex>0
+      */
+      const { imgList } = getApp().globalData;
+      if (e.direction === "left" && this.imgIndex < imgList.length - 1) {
+        //可以进行左滑
+        this.imgIndex++;
+        this.getData();
+      } else if (e.direction === "right" && this.imgIndex > 0) {
+        //可以进行右滑
+        this.imgIndex--;
+        this.getData();
+      } else {
+        uni.showToast({
+          title: "没有数据了",
+          icon: "none"
+        });
+      }
     }
   }
 };
@@ -255,6 +296,7 @@ export default {
           image {
             width: 40rpx;
             height: 40rpx;
+            display: inline-block;
           }
         }
       }
@@ -279,7 +321,7 @@ export default {
 //最新评论
 .new {
   .icon-pinglun {
-    color:aqua!important;
+    color: aqua !important;
   }
 }
 </style>

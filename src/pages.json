@@ -1,17 +1,24 @@
 {
 	"pages": [
 		{
-			"path": "pages/home/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		{
 			"path": "pages/album/index",
 			"style": {
 				"navigationBarTitleText": "专辑详情"
 			}
 		},
+		{
+			"path": "pages/demo/index",
+			"style": {
+				"navigationBarTitleText": "学习触屏事件"
+			}
+		},
+		{
+			"path": "pages/home/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		
 		{
 			"path": "pages/horizontal/index",
 			"style": {
@@ -68,7 +75,7 @@
 				"selectedIconPath": "./static/icons/horizontal.png"
 			},
 			{
-				"pagePath": "pages/home/index",
+				"pagePath": "pages/video/index",
 				"text": "精美视频",
 				"iconPath": "./static/icons/_video.png",
 				"selectedIconPath": "./static/icons/video.png"

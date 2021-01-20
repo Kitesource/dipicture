@@ -28,7 +28,7 @@
         <go-detail :list="wallpaper" :index="index">
           <image
             :src="item.thumb + item.rule.replace('$<Height>', 360)"
-            mode="widthFix"
+            mode="aspectFill"
           />
         </go-detail>
       </view>
@@ -157,6 +157,9 @@ export default {
   .album_item {
     width: 33.33%;
     border: 3rpx solid #fff;
+    image {
+      height: 160rpx;
+    }
   }
 }
 </style>
