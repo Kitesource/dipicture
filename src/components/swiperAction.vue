@@ -50,7 +50,7 @@ export default {
       let direction = "";
 
       //先判断滑动的距离,若合法再判断滑动方向 注意：加上绝对值
-      if(Math.abs(endX - this.startX) > 10) {
+      if(Math.abs(endX - this.startX) > 10 && (endY - this.startY) < 10) {
         //滑动的方向
         direction = endX - this.startX > 0 ? "right" : "left";
       }else {

@@ -59,8 +59,8 @@ export default {
   },
   onLoad(args) {
     // console.log(args);
-    // this.id = args.id;
-    this.id = "5d5f8e45e7bce75ae7fb8278";
+    this.id = args.id;
+    // this.id = "5d5f8e45e7bce75ae7fb8278";
     this.getList();
   },
   methods: {

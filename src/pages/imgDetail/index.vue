@@ -106,6 +106,11 @@
         </view>
       </view>
     </view>
+
+    <!-- 下载 -->
+    <view class="download">
+      <view class="download_btn" @click="handleDownload">下载图片</view>
+    </view>
   </view>
 </template>
 
@@ -195,6 +200,30 @@ export default {
           icon: "none"
         });
       }
+    },
+    //图片下载
+    async handleDownload() {
+      // 下载中
+      await uni.showLoading({
+        title: '下载中...',
+        mask: true
+      })
+
+      //1.将远程文件下载到小程序的内存中 tempFilePath
+      const result = await uni.downloadFile({url: this.imgDetail.img});
+      const {tempFilePath} = result[1];
+
+      //2. 将小程序内存中的临时文件下载到本地上
+      const result2 = await uni.saveImageToPhotosAlbum({filePath:tempFilePath});
+
+      //3. 提示用户下载成功
+      // console.log(result2);
+      // console.log('下载成功');
+      uni.hideLoading();
+      await uni.showToast({
+        title: '下载成功',
+        icon: 'success'
+      })
     }
   }
 };
@@ -322,6 +351,25 @@ export default {
 .new {
   .icon-pinglun {
     color: aqua !important;
+  }
+}
+
+//图片下载
+.download{
+  height: 120rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .download_btn{
+    width: 90%;
+    height: 80%;
+    background-color: $color;
+    color: #fff;
+    font-size: 50rpx;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
